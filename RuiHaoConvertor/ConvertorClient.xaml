@@ -1,0 +1,53 @@
+﻿<Window x:Class="RuiHaoConvertor.ConvertorClient"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RuiHaoConvertor"
+        xmlns:vm="clr-namespace:RuiHaoConvertor.ViewModel"
+        mc:Ignorable="d"
+       Title="Options" Height="345" Width="434" ResizeMode="NoResize" >
+    <Window.DataContext>
+        <vm:BOMConvertor/>
+    </Window.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="58"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="42"/>
+        </Grid.RowDefinitions>
+        <Canvas Grid.Row="0" Background="#FF0D9AC4">
+            <Image Canvas.Left="0" Canvas.Top="0" Source="./Images/Eevee_48px.png" Stretch="UniformToFill" Margin="10 5 0 0"/>
+            <Label Canvas.Right="10" Canvas.Top="5" Content="Convertor" Foreground="#FFF7EFEF"
+				   FontFamily="Comic Sans MS" FontSize="28" FontWeight="Bold"/>
+        </Canvas>
+        <Canvas Grid.Row="1" Background="#FF525F63">
+            <TabControl  Grid.RowSpan="2" Canvas.Left="10" Canvas.Top="2" Width="408" Height="208">
+                <TabItem Header="BOM">
+                    <DockPanel>
+                        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBox x:Name="pathTextBox" Width="270" Margin="10 0 30 0" Text="{Binding FilePath}"/>
+                            <Button x:Name="addButton" Content="Add" Padding="10 0 10 0" Click="addButton_Click"/>
+                        </StackPanel>
+                        <GroupBox Header="Message" Foreground="#FF0D9AC4" DockPanel.Dock="Top" Margin="10" BorderBrush="#FF0D9AC4" BorderThickness="1"  >
+                            <ScrollViewer>
+                                <TextBlock x:Name="messageBlock" Foreground="#FF6C6E6E" FontSize="12" FontFamily="Microsoft YaHei" TextWrapping="Wrap" Padding="5"
+                                           Text="{Binding Message}"/>
+                            </ScrollViewer>
+                        </GroupBox>
+                    </DockPanel>
+                </TabItem>
+                <TabItem Header="Be Continued">
+                    <Grid>
+
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Canvas>
+        <StackPanel Grid.Row="3" Orientation="Horizontal" FlowDirection="RightToLeft">
+            <Button x:Name="cancelButton" Content="_CANCLE" Margin="10,0,0,0" Height="22" Width="75" Click="cancelButton_Click"/>
+            <Button x:Name="okButton" Content="_OK" Margin="10,0,0,0" Height="22" Width="75" Click="okButton_Click" IsEnabled="{Binding IsConvertor}"/>
+        </StackPanel>
+    </Grid>
+</Window>
