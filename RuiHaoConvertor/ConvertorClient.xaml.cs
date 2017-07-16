@@ -31,7 +31,8 @@ namespace RuiHaoConvertor
 
         private void okButton_Click(object sender, RoutedEventArgs e)
         {
-
+            var model = DataContext as BOMConvertor;
+            model.FileDispose();
         }
 
         private void addButton_Click(object sender, RoutedEventArgs e)

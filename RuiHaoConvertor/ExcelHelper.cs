@@ -251,7 +251,20 @@ namespace RuiHaoConvertor
         /// <param name="newName"></param>
         public void Save(string newName)
         {
-            _workBook.SaveCopyAs(Environment.SpecialFolder.DesktopDirectory + @"\" + newName);
+            if (_workBook != null)
+            {
+                string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+                _workBook.SaveCopyAs(desktopPath + @"\" + newName + @".xlsx");
+            }
+        }
+
+        /// <summary>
+        /// 表示已经保存
+        /// </summary>
+        public void Saved()
+        {
+            if (_workBook != null)
+                _workBook.Saved = true;
         }
         /// <summary>
         /// 释放资源
@@ -271,6 +284,7 @@ namespace RuiHaoConvertor
             if (_excelApp != null)
             {
                 _excelApp.Quit();
+                //_excelApp = null;
             }
 
             // 杀进程
@@ -364,9 +378,9 @@ namespace RuiHaoConvertor
         /// </summary>
         /// <param name="cell">单元格名称</param>
         /// <returns></returns>
-        public string GetCellValue(string cell)
+        public object GetCellValue(string cell)
         {
-            return GetRange(cell).Text.ToString();
+            return GetRange(cell).Value;
         }
         /// <summary>
         /// 返回指定单元格的内容
@@ -374,9 +388,9 @@ namespace RuiHaoConvertor
         /// <param name="row">指定单元格的行</param>
         /// <param name="column">指定单元格的列</param>
         /// <returns></returns>
-        public string GetCellValue(int row, int column)
+        public object GetCellValue(int row, int column)
         {
-            return GetRange(row, column).Text.ToString();
+            return GetRange(row, column).Value;
         }
         /// <summary>
         /// 返回指定名称到指定名称单元格块的内容
@@ -384,9 +398,9 @@ namespace RuiHaoConvertor
         /// <param name="startCell">开始的指定名称单元格</param>
         /// <param name="endCell">结束的指定名称单元格</param>
         /// <returns></returns>
-        public string GetCellValue(string startCell, string endCell)
+        public object GetCellValue(string startCell, string endCell)
         {
-            return GetRange(startCell, endCell).Text.ToString();
+            return GetRange(startCell, endCell).Value;
         }
         /// <summary>
         /// 返回指定单元格范围的内容
@@ -396,9 +410,9 @@ namespace RuiHaoConvertor
         /// <param name="endRow">定位结束的行</param>
         /// <param name="endColumn">定位结束的列</param>
         /// <returns></returns>
-        public string GetCellValue(int startRow, int startColumn, int endRow, int endColumn)
+        public object GetCellValue(int startRow, int startColumn, int endRow, int endColumn)
         {
-            return GetRange(startRow, startColumn, endRow, endColumn).Text.ToString();
+            return GetRange(startRow, startColumn, endRow, endColumn).Value;
         }
         /// <summary>
         /// 设置指定名称单元格的内容
