@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:RuiHaoConvertor"
         xmlns:vm="clr-namespace:RuiHaoConvertor.ViewModel"
         mc:Ignorable="d"
-       Title="Options" Height="345" Width="434" ResizeMode="NoResize" >
+       Title="RuiHaoConvertor By_Ying" Height="345" Width="434" ResizeMode="NoResize" Closing="Window_Closing">
     <Window.DataContext>
         <vm:BOMConvertor/>
     </Window.DataContext>

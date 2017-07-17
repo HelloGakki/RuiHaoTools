@@ -274,7 +274,7 @@ namespace RuiHaoConvertor
         /// <returns></returns>
         [DllImport("User32.dll", CharSet = CharSet.Auto)]
         private static extern int GetWindowThreadProcessId(IntPtr hwnd, out int ID);
-        public void Dispose()
+        public void Close()
         {
             if (_workBook != null)
             {
@@ -286,7 +286,12 @@ namespace RuiHaoConvertor
                 _excelApp.Quit();
                 //_excelApp = null;
             }
-
+        }
+        /// <summary>
+        /// 关闭excel进程
+        /// </summary>
+        public void Dispose()
+        {
             // 杀进程
             int id = 0;
             GetWindowThreadProcessId(new IntPtr(_excelApp.Hwnd), out id);
@@ -540,6 +545,36 @@ namespace RuiHaoConvertor
         {
             GetRange(startRow, startColumn, endRow, endColumn).Formula = text;
         }
+        /// <summary>
+        /// 复制单元格块
+        /// </summary>
+        /// <param name="sourceRange">源单元格块</param>
+        /// <param name="targetRange">目标单元格块</param>
+        public void Copy(Range sourceRange, Range targetRange)
+        {
+            sourceRange.Copy(targetRange);
+        }
+        /// <summary>
+        /// 删除行
+        /// </summary>
+        /// <param name="startRow">开始的行, e.g 1,2,3,4</param>
+        /// <param name="endRow">结束的行 e.g 1,2,3,4</param>
+        public void DeleteRows(string startRow, string endRow)
+        {
+            Range rows = (Range)_workSheet.Rows[string.Format("{0}:{1}", startRow, endRow)];
+            rows.Delete(XlDeleteShiftDirection.xlShiftUp);
+        }
+        /// <summary>
+        /// 删除列
+        /// </summary>
+        /// <param name="startColumn">开始等列, e.g A,B,C,D</param>
+        /// <param name="endColumn">结束的列, e.g A,B,C,D</param>
+        public void DeleteColumn(string startColumn, string endColumn)
+        {
+            Range columns = (Range)_workSheet.Columns[string.Format("{0}:{1}", startColumn, endColumn)];
+            columns.Delete(XlDeleteShiftDirection.xlShiftToLeft);
+        }
+
 
         #endregion
 
@@ -743,6 +778,16 @@ namespace RuiHaoConvertor
             range.Borders[(XlBordersIndex)ExcelBordersIndex.InsideVertical].Weight = borderWeight;
             range.Borders[(XlBordersIndex)ExcelBordersIndex.InsideVertical].ColorIndex = constants;
         }
+        /// <summary>
+        /// 设置边框，包括外部和内部
+        /// </summary>
+        /// <param name="startRow"></param>
+        /// <param name="startColumn"></param>
+        /// <param name="endRow"></param>
+        /// <param name="endColumn"></param>
+        /// <param name="styleLine"></param>
+        /// <param name="borderWeight"></param>
+        /// <param name="constants"></param>
         public void SetCellBorder(int startRow, int startColumn, int endRow, int endColumn,
          ExcelStyleLine styleLine = ExcelStyleLine.Continious, ExcelBorderWeight borderWeight = ExcelBorderWeight.Thin, Constants constants = Constants.xlAutomatic)
         {
@@ -773,6 +818,42 @@ namespace RuiHaoConvertor
             range.Borders[(XlBordersIndex)ExcelBordersIndex.InsideVertical].LineStyle = styleLine;
             range.Borders[(XlBordersIndex)ExcelBordersIndex.InsideVertical].Weight = borderWeight;
             range.Borders[(XlBordersIndex)ExcelBordersIndex.InsideVertical].ColorIndex = constants;
+        }
+        /// <summary>
+        /// 合并单元格
+        /// </summary>
+        /// <param name="range"></param>
+        public void SetMergeCells(Range range)
+        {
+            range.MergeCells = true;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="range"></param>
+        /// <param name="fontName"></param>
+        /// <param name="fontSize"></param>
+        /// <param name="stringFormat">/// 常规："G/通用格式"
+        /// 数值："[红色]-0.00"(表示是2位小数，如果是负数的话则用红色表示)
+        /// 货币："￥#,##0.000;[红色]￥-#,##0.000"(￥是货币符号，可以用$,也可以不填写，0.000代表三位小数位；[红色]表示如果是负数的话，用红色表示)
+        /// 日期：@"yyyy"年"m"月"d"日";@"    (表示用年月日了表示)        @"[DBNum1][$-804]yyyy"年"m"月"d"日";@"(表示用汉字表示年月日)
+        /// 百分比："0.000%;[红色]-0.000%"(表示小数位为3位,红色表示如果是负数的话则用红色表示)
+        /// 文本："@"(表示是文本格式)
+        /// 特殊："[DBNum1][$-804]G/通用格式"(能将数字转换成中文小写，如1234转换成一千二百三十四)        "[DBNum2][$-804]G/通用格式"(能将数字转换成中文大写，如1234转换成 壹仟贰佰叁拾肆)
+        /// 自定义：输入自定义的格式化字符串
+        ///</param>
+        /// <param name="wrapText"></param>
+        /// <param name="colorIndex"></param>
+        /// <param name="bold"></param>
+        public void setCellTextByFormat(Range range, string fontName, string fontSize,
+            string stringFormat = "G/通用格式", bool wrapText = true, int colorIndex = 1, bool bold = false)
+        {
+            range.Font.Name = fontName;
+            range.Font.Size = fontSize;
+            range.Font.Bold = bold;
+            range.Cells.NumberFormatLocal = stringFormat;
+            range.WrapText = wrapText;
+            range.Font.ColorIndex = colorIndex;
         }
 
         #endregion

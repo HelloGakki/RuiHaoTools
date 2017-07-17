@@ -26,19 +26,27 @@ namespace RuiHaoConvertor
 
         private void cancelButton_Click(object sender, RoutedEventArgs e)
         {
-
+            //var model = DataContext as BOMConvertor;
+            //model.Dispose();
+            this.Close();
         }
 
         private void okButton_Click(object sender, RoutedEventArgs e)
         {
             var model = DataContext as BOMConvertor;
-            model.FileDispose();
+            model.DelayFileConvertor();
         }
 
         private void addButton_Click(object sender, RoutedEventArgs e)
         {
             var model = DataContext as BOMConvertor;
             model.GetFilePath();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var model = DataContext as BOMConvertor;
+            model.Dispose();
         }
     }
 }

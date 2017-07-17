@@ -5,6 +5,7 @@ using System.Text;
 using System.ComponentModel;
 using RuiHaoConvertor;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace RuiHaoConvertor.ViewModel
 {
@@ -99,26 +100,29 @@ namespace RuiHaoConvertor.ViewModel
                 FilePath = openFileDialog.FileName;
             IsConvertor = true;
         }
-        public void FileDispose()
+        private void FileConvertor()
         {
             try
             {
+                // 打开文件
                 sourceExcel.Show();
                 exportExcel.Show();
                 sourceExcel.Open(FilePath);
                 exportExcel.Open(Environment.CurrentDirectory + @"/" + "模板.xlsx");
-                //sourceExcel.Hide();
-                //exportExcel.Hide();
+                sourceExcel.Hide();
+                exportExcel.Hide();
                 sourceExcel.SetActivitySheet("Export");
                 exportExcel.SetActivitySheet("Export");
+
+                // 输出状态
+                Message += "打开文件：" + FilePath + "成功" + "\r\n";
+                Message += "正在导出...\r\n";
+
+                // 读数据，填数据
+                int count = 0;
                 for (var x = 1; x <= 10; x++)
                 {
                     List<string> dataList = new List<string>();
-                    //int count = -1, selectX = 0;
-                    //while (count == -1)
-                    //{
-
-                    //}
 
                     for (var y = 1; ; y++)
                     {
@@ -135,30 +139,63 @@ namespace RuiHaoConvertor.ViewModel
                     if (columnIndex == -1)
                         continue;
                     dataList.RemoveAt(0);
+                    if (dataList.Count > count)
+                        count = dataList.Count;
                     for (int rowIndex = 0; rowIndex < dataList.Count; rowIndex++)
                     {
                         if (columnIndex == 11)
                             exportExcel.SetCellValue(rowIndex + 7, columnIndex, Convert.ToDouble(dataList[rowIndex]));
                         else
+                        {
                             exportExcel.SetCellValue(rowIndex + 7, columnIndex, dataList[rowIndex]);
+                            // 合并单元格
+                            if (columnIndex == 3)
+                                exportExcel.SetMergeCells(exportExcel.GetRange(rowIndex + 7, columnIndex, rowIndex + 7, columnIndex + 1));
+                            if (columnIndex == 6)
+                                exportExcel.SetMergeCells(exportExcel.GetRange(rowIndex + 7, columnIndex, rowIndex + 7, columnIndex + 2));
+                            if (columnIndex == 12)
+                                exportExcel.SetMergeCells(exportExcel.GetRange(rowIndex + 7, columnIndex, rowIndex + 7, columnIndex + 3));
+                        }
                     }
                 }
+
+                // 填充序列号
+                for (var index = 1; index <= count; index++)
+                {
+                    exportExcel.SetCellValue(7 + index - 1, 1, index);
+                }
+
+                // 设置样式
+                exportExcel.Copy(exportExcel.GetRange("R1", "AG10"), exportExcel.GetRange(count + 7, 1, 10 + count, 16));   // 复制变更信息到对应位置
+                exportExcel.DeleteColumn("R", "AG");    // 删除变更信息
+                exportExcel.SetCellValue("D2", "应凌峰");
+                exportExcel.SetCellBorder(7, 1, 7 + count, 16); // 添加边框
+                exportExcel.setCellTextByFormat(exportExcel.GetRange(7, 1, 7 + count + 10, 16), "微软雅黑", "10");
+                exportExcel.SetCellValue(count + 2 + 7, 10, "应凌峰");
+                exportExcel.SetCellValue(count + 2 + 7, 11, DateTime.Now.ToShortDateString());
+                exportExcel.setCellTextByFormat(exportExcel.GetRange(count + 2 + 7, 11), "微软雅黑", "10", stringFormat: "yyyy-m-d");
+
+
+                // 保存文件
                 exportExcel.Save("Export");
                 exportExcel.Saved();
                 sourceExcel.Saved();
-                exportExcel.Dispose();
-                sourceExcel.Dispose();
+                exportExcel.Close();
+                sourceExcel.Close();
+
+                // 输出状态
+                Message += "导出BOM成功" + "\r\n" + "共" + count.ToString() + "项" + "\r\n";
             }
             catch (Exception e)
             {
                 Message += "转换失败:" + e.Message + "\r\n";
                 exportExcel.Saved();
                 sourceExcel.Saved();
-                exportExcel.Dispose();
-                sourceExcel.Dispose();
+                exportExcel.Close();
+                sourceExcel.Close();
             }
         }
-        public int GetCoordinate(string title)
+        private int GetCoordinate(string title)
         {
             switch (title)
             {
@@ -183,6 +220,18 @@ namespace RuiHaoConvertor.ViewModel
             }
         }
 
+        public void Dispose()
+        {
+            exportExcel.Dispose();
+            sourceExcel.Dispose();
+        }
+
+        public void DelayFileConvertor()
+        {
+            Thread fileConvertorThread = new Thread(new ThreadStart(FileConvertor));
+            fileConvertorThread.IsBackground = true;
+            fileConvertorThread.Start();
+        }
         #endregion
     }
 }
