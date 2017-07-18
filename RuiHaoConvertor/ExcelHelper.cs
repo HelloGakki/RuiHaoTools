@@ -292,11 +292,14 @@ namespace RuiHaoConvertor
         /// </summary>
         public void Dispose()
         {
-            // 杀进程
-            int id = 0;
-            GetWindowThreadProcessId(new IntPtr(_excelApp.Hwnd), out id);
-            System.Diagnostics.Process progress = System.Diagnostics.Process.GetProcessById(id);
-            progress.Kill();
+            if (_excelApp != null)
+            {
+                // 杀进程
+                int id = 0;
+                GetWindowThreadProcessId(new IntPtr(_excelApp.Hwnd), out id);
+                System.Diagnostics.Process progress = System.Diagnostics.Process.GetProcessById(id);
+                progress.Kill();
+            }
         }
         #endregion
 

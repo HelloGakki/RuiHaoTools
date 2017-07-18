@@ -6,9 +6,9 @@
         xmlns:local="clr-namespace:RuiHaoConvertor"
         xmlns:vm="clr-namespace:RuiHaoConvertor.ViewModel"
         mc:Ignorable="d"
-       Title="RuiHaoConvertor By_Ying" Height="345" Width="434" ResizeMode="NoResize" Closing="Window_Closing">
+       Title="RuiHaoConvertor By_Ying" Height="400" Width="580" ResizeMode="NoResize" Closing="Window_Closing">
     <Window.DataContext>
-        <vm:BOMConvertor/>
+        <vm:ConvertorViewModel/>
     </Window.DataContext>
     <Grid>
         <Grid.RowDefinitions>
@@ -23,25 +23,52 @@
 				   FontFamily="Comic Sans MS" FontSize="28" FontWeight="Bold"/>
         </Canvas>
         <Canvas Grid.Row="1" Background="#FF525F63">
-            <TabControl  Grid.RowSpan="2" Canvas.Left="10" Canvas.Top="2" Width="408" Height="208">
+            <TabControl  Grid.RowSpan="2" Canvas.Left="10" Canvas.Top="2" Width="552" Height="263">
                 <TabItem Header="BOM">
                     <DockPanel>
                         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
-                            <TextBox x:Name="pathTextBox" Width="270" Margin="10 0 30 0" Text="{Binding FilePath}"/>
+                            <TextBox x:Name="pathTextBox" Width="270" Margin="10 0 30 0" Text="{Binding BomConvertor.FilePath}"/>
                             <Button x:Name="addButton" Content="Add" Padding="10 0 10 0" Click="addButton_Click"/>
                         </StackPanel>
                         <GroupBox Header="Message" Foreground="#FF0D9AC4" DockPanel.Dock="Top" Margin="10" BorderBrush="#FF0D9AC4" BorderThickness="1"  >
-                            <ScrollViewer>
+                            <ScrollViewer x:Name="BOMMessage" MouseLeave="BOMMessage_MouseLeave">
                                 <TextBlock x:Name="messageBlock" Foreground="#FF6C6E6E" FontSize="12" FontFamily="Microsoft YaHei" TextWrapping="Wrap" Padding="5"
-                                           Text="{Binding Message}"/>
+                                           Text="{Binding BomConvertor.Message}"/>
                             </ScrollViewer>
                         </GroupBox>
                     </DockPanel>
                 </TabItem>
-                <TabItem Header="Be Continued">
-                    <Grid>
-
-                    </Grid>
+                <TabItem Header="R-C">
+                    <DockPanel>
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Center">
+                            <RadioButton x:Name="resistorRadioButton" Content="电阻" Margin="10" IsChecked="True" Checked="resistorRadioButton_Checked"/>
+                            <RadioButton x:Name="capacitorRadioButton" Content="电容" Margin="10" Checked="capacitorRadioButton_Checked"/>
+                            <Button x:Name="confirmButton" Content="Confirm" Height="25" Margin="10 0 0 0" Click="confirmButton_Click"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom">
+                            <Label Content="类别"/>
+                            <ComboBox x:Name="categoryComboBox" Width="60" ItemsSource="{Binding RCConvertor.Category}" SelectedValue="{Binding RCConvertor.SelectCategory}"
+                                      HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                            <Label Content="封装" Margin="10 0 0 0"/>
+                            <TextBox x:Name="footprintTextBox" Width="40" Text="{Binding RCConvertor.Footprint}"/>
+                            <Label Content="P/W" Margin="10 0 0 0"/>
+                            <ComboBox x:Name="powerComboBox" Width="65" ItemsSource="{Binding RCConvertor.PowerOrWithstanding}" SelectedValue="{Binding RCConvertor.SelectPowerOrWithstanding}"
+                                      HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                            <Label Content="精度" Margin="10 0 0 0"/>
+                            <ComboBox x:Name="precisionComboBox" Width="55" ItemsSource="{Binding RCConvertor.Precision}" SelectedValue="{Binding RCConvertor.SelectPrecision}"
+                                      HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                            <Label Content="值" Margin="10 0 0 0"/>
+                            <TextBox x:Name="valueTextBox" Width="40" Margin="0 0 5 0"/>
+                            <ComboBox x:Name="valueComboBox" Width="48" ItemsSource="{Binding RCConvertor.Unit}" SelectedValue="{Binding RCConvertor.SelectUnit}"
+                                      HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                        </StackPanel>
+                        <GroupBox Header="Message" Foreground="#FF0D9AC4" DockPanel.Dock="Top" Margin="10" BorderBrush="#FF0D9AC4" BorderThickness="1"  >
+                            <ScrollViewer>
+                                <TextBlock x:Name="messageBlock2" Foreground="#FF6C6E6E" FontSize="12" FontFamily="Microsoft YaHei" TextWrapping="Wrap" Padding="5"
+                                           Text="{Binding Message}"/>
+                            </ScrollViewer>
+                        </GroupBox>
+                    </DockPanel>
                 </TabItem>
             </TabControl>
         </Canvas>

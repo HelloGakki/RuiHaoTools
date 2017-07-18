@@ -30,6 +30,7 @@ namespace RuiHaoConvertor.ViewModel
         #endregion
 
         #region " 绑定属性定义 "
+
         public string Message
         {
             get
@@ -78,8 +79,8 @@ namespace RuiHaoConvertor.ViewModel
 
         public BOMConvertor()
         {
-            sourceExcel = new ExcelHelper();
-            exportExcel = new ExcelHelper();
+            //sourceExcel = new ExcelHelper();
+            //exportExcel = new ExcelHelper();
             Message = "感谢使用本软件\r\n";
             _filePath = "";
             IsConvertor = false;
@@ -104,6 +105,12 @@ namespace RuiHaoConvertor.ViewModel
         {
             try
             {
+                // 创建excel客户端
+                if (sourceExcel == null)
+                    sourceExcel = new ExcelHelper();
+                if (exportExcel == null)
+                    exportExcel = new ExcelHelper();
+
                 // 打开文件
                 sourceExcel.Show();
                 exportExcel.Show();
@@ -169,11 +176,11 @@ namespace RuiHaoConvertor.ViewModel
                 exportExcel.Copy(exportExcel.GetRange("R1", "AG10"), exportExcel.GetRange(count + 7, 1, 10 + count, 16));   // 复制变更信息到对应位置
                 exportExcel.DeleteColumn("R", "AG");    // 删除变更信息
                 exportExcel.SetCellValue("D2", "应凌峰");
-                exportExcel.SetCellBorder(7, 1, 7 + count, 16); // 添加边框
-                exportExcel.setCellTextByFormat(exportExcel.GetRange(7, 1, 7 + count + 10, 16), "微软雅黑", "10");
-                exportExcel.SetCellValue(count + 2 + 7, 10, "应凌峰");
-                exportExcel.SetCellValue(count + 2 + 7, 11, DateTime.Now.ToShortDateString());
-                exportExcel.setCellTextByFormat(exportExcel.GetRange(count + 2 + 7, 11), "微软雅黑", "10", stringFormat: "yyyy-m-d");
+                exportExcel.SetCellBorder(7, 1, 7 + count - 1, 16); // 添加边框
+                exportExcel.setCellTextByFormat(exportExcel.GetRange(7, 1, 7 + count - 1 + 10, 16), "微软雅黑", "10");
+                exportExcel.SetCellValue(count - 1 + 3 + 7, 10, "应凌峰");
+                exportExcel.SetCellValue(count - 1 + 3 + 7, 11, DateTime.Now.ToShortDateString());
+                exportExcel.setCellTextByFormat(exportExcel.GetRange(count - 1 + 3 + 7, 11), "微软雅黑", "10", stringFormat: "yyyy-m-d");
 
 
                 // 保存文件
@@ -222,8 +229,10 @@ namespace RuiHaoConvertor.ViewModel
 
         public void Dispose()
         {
-            exportExcel.Dispose();
-            sourceExcel.Dispose();
+            if (exportExcel != null)
+                exportExcel.Dispose();
+            if (sourceExcel != null)
+                sourceExcel.Dispose();
         }
 
         public void DelayFileConvertor()

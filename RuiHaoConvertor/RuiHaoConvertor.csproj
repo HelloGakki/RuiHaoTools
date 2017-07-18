@@ -71,7 +71,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Components.cs" />
     <Compile Include="ViewModel\BOMConvertor.cs" />
+    <Compile Include="ViewModel\ConvertorViewModel.cs" />
+    <Compile Include="ViewModel\RCConvertor.cs" />
     <Page Include="ConvertorClient.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
