@@ -214,6 +214,7 @@ namespace RuiHaoConvertor
         public void Open()
         {
             _workBook = _excelApp.Workbooks.Add(true);
+            _workSheet = (Worksheet)_workBook.ActiveSheet;
         }
         /// <summary>
         /// 打开指定路径文件

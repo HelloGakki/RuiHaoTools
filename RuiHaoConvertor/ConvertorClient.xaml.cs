@@ -34,7 +34,10 @@ namespace RuiHaoConvertor
         private void okButton_Click(object sender, RoutedEventArgs e)
         {
             var model = DataContext as ConvertorViewModel;
-            model.BomConvertor.DelayFileConvertor();
+            if(tabControl.SelectedIndex == 0)
+                model.BomConvertor.DelayFileConvertor();
+            if (tabControl.SelectedIndex == 1)
+                model.RCConvertor.DelaySaveCode();
         }
 
         private void addButton_Click(object sender, RoutedEventArgs e)
@@ -71,6 +74,12 @@ namespace RuiHaoConvertor
         {
             var model = DataContext as ConvertorViewModel;
             model.RCConvertor.Coding();
+        }
+
+        private void codeMessage_MouseLeave(object sender, MouseEventArgs e)
+        {
+            var control = sender as ScrollViewer;
+            control.ScrollToEnd();
         }
     }
 }

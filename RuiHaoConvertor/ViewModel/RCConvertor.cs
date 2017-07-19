@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.ComponentModel;
+using System.Threading;
 
 namespace RuiHaoConvertor.ViewModel
 {
@@ -25,7 +26,9 @@ namespace RuiHaoConvertor.ViewModel
         private string footprint, componentsValue, selectCategory, selectPowerOrWithstanding, selectPrecision, selectUnit;
         private Components components;
         private List<string> _resistanceList, _capacitanceList, _powerList, _withstandingList, _precisionList, _resUnitList, _capUnitList;
-        private List<string> _code;
+        private List<string> _codeList;
+        private string message = "感谢使用本软件\r\n";
+        ExcelHelper _exportExcel;
 
         #endregion
 
@@ -205,6 +208,22 @@ namespace RuiHaoConvertor.ViewModel
                 OnPropertyChanged("SelectUnit");
             }
         }
+        /// <summary>
+        /// 消息
+        /// </summary>
+        public string Message
+        {
+            get
+            {
+                return message;
+            }
+
+            set
+            {
+                message = value;
+                OnPropertyChanged("Message");
+            }
+        }
 
         #endregion
 
@@ -212,7 +231,7 @@ namespace RuiHaoConvertor.ViewModel
 
         public RCConvertor()
         {
-            _code = new List<string>();
+            _codeList = new List<string>();
             _resistanceList = new List<string> { "贴片", "直插", "热敏", "压敏", "保险丝", "可调" };
             _capacitanceList = new List<string> { "贴片", "瓷片", "钽电容", "电解", "绦纶", "独石", "X", "Y" };
             _powerList = new List<string> { "1/16W", "1/10W", "1/8W", "1/4W", "1/2W", "1W", "2W", "3W", "5W", "其他" };
@@ -226,9 +245,9 @@ namespace RuiHaoConvertor.ViewModel
             Unit = new ObservableCollection<string>();
             _precisionList.ForEach(x => Precision.Add(x));
             Footprint = "0603";
-            SelectCategory = _resistanceList[0];
-            SelectPowerOrWithstanding = _powerList[0];
-            SelectPrecision = _precisionList[0];
+            //SelectCategory = _resistanceList[0];
+            //SelectPowerOrWithstanding = _powerList[2];
+            //SelectPrecision = _precisionList[3];
         }
 
         #endregion
@@ -249,7 +268,8 @@ namespace RuiHaoConvertor.ViewModel
                 _powerList.ForEach(x => PowerOrWithstanding.Add(x));
                 _resUnitList.ForEach(x => Unit.Add(x));
                 SelectCategory = _resistanceList[0];
-                SelectPowerOrWithstanding = _powerList[0];
+                SelectPowerOrWithstanding = _powerList[2];
+                SelectPrecision = _precisionList[3];
                 SelectUnit = _resUnitList[0];
             }
             if (components == Components.Capacitance)
@@ -260,8 +280,9 @@ namespace RuiHaoConvertor.ViewModel
                 _capacitanceList.ForEach(x => Category.Add(x));
                 _withstandingList.ForEach(x => PowerOrWithstanding.Add(x));
                 _capUnitList.ForEach(x => Unit.Add(x));
-                SelectCategory = _capacitanceList[0];
-                SelectPowerOrWithstanding = _withstandingList[0];
+                SelectCategory = _resistanceList[0];
+                SelectPowerOrWithstanding = _withstandingList[2];
+                SelectPrecision = _precisionList[3];
                 SelectUnit = _capUnitList[0];
             }
         }
@@ -270,9 +291,14 @@ namespace RuiHaoConvertor.ViewModel
         /// </summary>
         public void Coding()
         {
-            string code = "";
-            code = CategoryCode(SelectCategory) + Footprint + PowerCode(SelectPowerOrWithstanding) + PrecisionCode(SelectPrecision);
-
+            string code = null;
+            code = CategoryCode(SelectCategory) + Footprint + PowerOrWithstandingCode(SelectPowerOrWithstanding) + PrecisionCode(SelectPrecision)
+            + ScientificCode(ComponentsValue) + "0";
+            if (code != null && (code.Count() >= 13))
+            {
+                _codeList.Add(code);
+                Message += "转换件号：" + code + "\r\n";
+            }
         }
         /// <summary>
         /// 类别代号转换
@@ -289,55 +315,75 @@ namespace RuiHaoConvertor.ViewModel
                 if (_resistanceList.Contains(category))
                     return resCode[_resistanceList.IndexOf(category)];
                 else
-                    return "";
+                    return null;
             }
             else if (Components == Components.Capacitance)
             {
                 if (_capacitanceList.Contains(category))
                     return capCode[_capacitanceList.IndexOf(category)];
                 else
-                    return "";
+                    return null;
             }
             else
-                return "";
+                return null;
         }
         /// <summary>
         /// 功率代码转换
         /// </summary>
         /// <param name="power">功率值</param>
         /// <returns></returns>
-        private string PowerCode(string power)
+        private string PowerOrWithstandingCode(string powerOrWithstanding)
         {
-            if (_powerList.Contains(power))
+
+            if (Components == Components.Resistance)
             {
-                if (power != "其他")
-                    return _powerList.IndexOf(power).ToString();
+                if (_powerList.Contains(powerOrWithstanding))
+                {
+                    if (powerOrWithstanding != "其他")
+                        return _powerList.IndexOf(powerOrWithstanding).ToString();
+                    else
+                        return "Z";
+                }
                 else
-                    return "Z";
+                    return null;
+            }
+            else if (Components == Components.Capacitance)
+            {
+                if (_withstandingList.Contains(powerOrWithstanding))
+                {
+                    if (powerOrWithstanding != "其他")
+                        return Convert.ToString(_withstandingList.IndexOf(powerOrWithstanding), 16);
+
+                    else
+                        return "Z";
+
+                }
+                else
+                    return null;
             }
             else
-                return "";
+                return null;
         }
-        /// <summary>
-        /// 耐压值代号转换
-        /// </summary>
-        /// <param name="withstanding"></param>
-        /// <returns></returns>
-        private string WithstandingCode(string withstanding)
-        {
-           
-            if (_withstandingList.Contains(withstanding))
-            {
-                if (withstanding != "其他")
-                    return Convert.ToString(_withstandingList.IndexOf(withstanding), 16);
-                
-                else
-                    return "Z";
-                
-            }
-            else
-                return "";
-        }
+        ///// <summary>
+        ///// 耐压值代号转换
+        ///// </summary>
+        ///// <param name="withstanding"></param>
+        ///// <returns></returns>
+        //private string WithstandingCode(string withstanding)
+        //{
+
+        //    if (_withstandingList.Contains(withstanding))
+        //    {
+        //        if (withstanding != "其他")
+        //            return Convert.ToString(_withstandingList.IndexOf(withstanding), 16);
+
+        //        else
+        //            return "Z";
+
+        //    }
+        //    else
+        //        return null;
+        //}
         /// <summary>
         /// 精度代码转化
         /// </summary>
@@ -349,7 +395,102 @@ namespace RuiHaoConvertor.ViewModel
             if (_precisionList.Contains(precision))
                 return code[_precisionList.IndexOf(precision)];
             else
-                return "";
+                return null;
+        }
+        /// <summary>
+        /// 科学记数转换
+        /// </summary>
+        /// <param name="componentsValue"></param>
+        /// <returns></returns>
+        private string ScientificCode(string componentsValue)
+        {
+            try
+            {
+                int zeroCount = 0;
+                //int quotient = 0;
+                int remainder = 0;
+                int dividend = 0;
+
+                if (Components == Components.Resistance)
+                {
+                    if (_resUnitList.Contains(SelectUnit))
+                        zeroCount = _resUnitList.IndexOf(SelectUnit) * 3;
+                }
+                if (Components == Components.Capacitance)
+                {
+                    if (_capUnitList.Contains(SelectUnit))
+                        zeroCount = _capUnitList.IndexOf(SelectUnit) * 3;
+                }
+
+                dividend = (int)(Convert.ToDouble(ComponentsValue) * Math.Pow(10, zeroCount));
+                for (var i = 1; dividend >= 10; i++)
+                {
+                    dividend = Math.DivRem(dividend, 10, out remainder);
+                    zeroCount = i;
+                }
+                if (zeroCount > 0)
+                {
+                    dividend = dividend * 10 + remainder;
+                    zeroCount -= 1;
+                    return dividend.ToString() + zeroCount.ToString();
+                }
+                else
+                    return "0" + dividend.ToString() + zeroCount.ToString();
+                //if (remainder > 0)
+                //    dividend = dividend * 10 + remainder;
+                //if (dividend >= 10)
+                //    return dividend.ToString() + zeroCount.ToString();
+                //else if (zeroCount > 0)
+                //    return dividend.ToString() + "0" + zeroCount.ToString();
+                //else
+                //    return "0" + dividend.ToString() + "0";
+            }
+            catch (Exception e)
+            {
+                Message += e.Message + "\r\n";
+                return null;
+            }
+        }
+        private void SaveCode()
+        {
+            try
+            {
+                if (_codeList.Count == 0)
+                {
+                    Message += "导出错误，件号列表为空\r\n";
+                    return;
+                }
+                if (_exportExcel == null)
+                    _exportExcel = new ExcelHelper();
+                _exportExcel.Show();
+                _exportExcel.Open();
+                _exportExcel.Hide();
+                for (var i = 0; i < _codeList.Count; i++)
+                {
+                    _exportExcel.SetCellValue(i + 1, 1, i + 1);
+                    _exportExcel.SetCellValue(i + 1, 2, _codeList[i]);
+                }
+                _exportExcel.SetCellBorder(1, 1, _codeList.Count, 2);
+                _exportExcel.setCellTextByFormat(_exportExcel.GetRange(1, 1, _codeList.Count, 2), "微软雅黑", "10");
+                _exportExcel.Save("CodeExoprt");
+                _exportExcel.Saved();
+                _exportExcel.Close();
+
+                Message += "导出件号成功" + "\r\n" + "共" + _codeList.Count().ToString() + "项" + "\r\n";
+            }
+            catch (Exception e)
+            {
+                Message += "转换失败:" + e.Message + "\r\n";
+                _exportExcel.Saved();
+                _exportExcel.Close();
+            }
+        }
+
+        public void DelaySaveCode()
+        {
+            Thread saveCodeThread = new Thread(new ThreadStart(SaveCode));
+            saveCodeThread.IsBackground = true;
+            saveCodeThread.Start();
         }
 
 

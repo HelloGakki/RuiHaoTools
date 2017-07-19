@@ -10,6 +10,27 @@
     <Window.DataContext>
         <vm:ConvertorViewModel/>
     </Window.DataContext>
+    <Window.Resources>
+        <Style TargetType="Image" x:Key="imageStyle">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=tabControl,Path=SelectedIndex}" Value="0">
+                    <Setter Property="Source" Value="./Images/pikachu_48px.png"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ElementName=tabControl,Path=SelectedIndex}" Value="1">
+                    <Setter Property="Source" Value="./Images/charmander_48px.png"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ElementName=tabControl,Path=SelectedIndex}" Value="2">
+                    <Setter Property="Source" Value="./Images/squirtle_48px.png"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ElementName=tabControl,Path=SelectedIndex}" Value="3">
+                    <Setter Property="Source" Value="./Images/bullbasaur_48px.png"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ElementName=tabControl,Path=SelectedIndex}" Value="4">
+                    <Setter Property="Source" Value="./Images/Eevee_48px.png"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="58"/>
@@ -18,12 +39,12 @@
             <RowDefinition Height="42"/>
         </Grid.RowDefinitions>
         <Canvas Grid.Row="0" Background="#FF0D9AC4">
-            <Image Canvas.Left="0" Canvas.Top="0" Source="./Images/Eevee_48px.png" Stretch="UniformToFill" Margin="10 5 0 0"/>
+            <Image Canvas.Left="0" Canvas.Top="0" Style="{StaticResource imageStyle}" Stretch="UniformToFill" Margin="10 5 0 0"/>
             <Label Canvas.Right="10" Canvas.Top="5" Content="Convertor" Foreground="#FFF7EFEF"
 				   FontFamily="Comic Sans MS" FontSize="28" FontWeight="Bold"/>
         </Canvas>
         <Canvas Grid.Row="1" Background="#FF525F63">
-            <TabControl  Grid.RowSpan="2" Canvas.Left="10" Canvas.Top="2" Width="552" Height="263">
+            <TabControl x:Name="tabControl" Grid.RowSpan="2" Canvas.Left="10" Canvas.Top="2" Width="552" Height="263">
                 <TabItem Header="BOM">
                     <DockPanel>
                         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
@@ -58,14 +79,14 @@
                             <ComboBox x:Name="precisionComboBox" Width="55" ItemsSource="{Binding RCConvertor.Precision}" SelectedValue="{Binding RCConvertor.SelectPrecision}"
                                       HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                             <Label Content="值" Margin="10 0 0 0"/>
-                            <TextBox x:Name="valueTextBox" Width="40" Margin="0 0 5 0"/>
+                            <TextBox x:Name="valueTextBox" Width="40" Margin="0 0 5 0" Text="{Binding RCConvertor.ComponentsValue}"/>
                             <ComboBox x:Name="valueComboBox" Width="48" ItemsSource="{Binding RCConvertor.Unit}" SelectedValue="{Binding RCConvertor.SelectUnit}"
                                       HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                         </StackPanel>
                         <GroupBox Header="Message" Foreground="#FF0D9AC4" DockPanel.Dock="Top" Margin="10" BorderBrush="#FF0D9AC4" BorderThickness="1"  >
-                            <ScrollViewer>
+                            <ScrollViewer x:Name="codeMessage" MouseLeave="codeMessage_MouseLeave">
                                 <TextBlock x:Name="messageBlock2" Foreground="#FF6C6E6E" FontSize="12" FontFamily="Microsoft YaHei" TextWrapping="Wrap" Padding="5"
-                                           Text="{Binding Message}"/>
+                                           Text="{Binding RCConvertor.Message}"/>
                             </ScrollViewer>
                         </GroupBox>
                     </DockPanel>
