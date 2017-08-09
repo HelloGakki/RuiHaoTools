@@ -81,5 +81,27 @@ namespace RuiHaoConvertor
             var control = sender as ScrollViewer;
             control.ScrollToEnd();
         }
+
+        private void TabItem_DragEnter(object sender, DragEventArgs e)
+        {
+            if (!e.Data.GetDataPresent(DataFormats.FileDrop))
+                return;
+             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            pathTextBox.Text = files[0];
+        }
+
+        //private void TabItem_DragOver(object sender, DragEventArgs e)
+        //{
+        //    if (!e.Data.GetDataPresent(DataFormats.FileDrop))
+        //        return;
+        //    messageBlock.Text += "DragOver\r\n";
+        //}
+
+        //private void TabItem_DragLeave(object sender, DragEventArgs e)
+        //{
+        //    if (!e.Data.GetDataPresent(DataFormats.FileDrop))
+        //        return;
+        //    messageBlock.Text += "DragLeave\r\n";
+        //}
     }
 }

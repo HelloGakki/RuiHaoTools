@@ -45,7 +45,7 @@
         </Canvas>
         <Canvas Grid.Row="1" Background="#FF525F63">
             <TabControl x:Name="tabControl" Grid.RowSpan="2" Canvas.Left="10" Canvas.Top="2" Width="552" Height="263">
-                <TabItem Header="BOM">
+                <TabItem Header="BOM" AllowDrop="True" DragEnter="TabItem_DragEnter" >
                     <DockPanel>
                         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
                             <TextBox x:Name="pathTextBox" Width="270" Margin="10 0 30 0" Text="{Binding BomConvertor.FilePath}"/>

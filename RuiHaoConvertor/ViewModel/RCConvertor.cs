@@ -414,12 +414,40 @@ namespace RuiHaoConvertor.ViewModel
                 if (Components == Components.Resistance)
                 {
                     if (_resUnitList.Contains(SelectUnit))
+                    {
+                        if (SelectUnit == _resUnitList[0])
+                        {
+                            if (ComponentsValue.Contains("."))
+                            {
+                                if ((int)Convert.ToDouble(ComponentsValue) == 0)
+                                    return ((Convert.ToDouble(ComponentsValue) * 100).ToString() + "B");
+                                else
+                                    return ((Convert.ToDouble(ComponentsValue) * 10).ToString() + "A");
+
+                            }
+                            //return Convert.ToUInt32(ComponentsValue) == 0 ? Convert.ToDouble(ComponentsValue) * 100).ToString() + "B" : (Convert.ToDouble(ComponentsValue) * 10).ToString() + "A";
+                        }
                         zeroCount = _resUnitList.IndexOf(SelectUnit) * 3;
+                    }
                 }
                 if (Components == Components.Capacitance)
                 {
                     if (_capUnitList.Contains(SelectUnit))
+                    {
+                        if (SelectUnit == _capUnitList[0])
+                        {
+                            if (ComponentsValue.Contains("."))
+                            {
+                                if ((int)Convert.ToDouble(ComponentsValue) == 0)
+                                    return ((Convert.ToDouble(ComponentsValue) * 100).ToString() + "B");
+                                else
+                                    return ((Convert.ToDouble(ComponentsValue) * 10).ToString() + "A");
+
+                            }
+                            //return Convert.ToUInt32(ComponentsValue) == 0 ? Convert.ToDouble(ComponentsValue) * 100).ToString() + "B" : (Convert.ToDouble(ComponentsValue) * 10).ToString() + "A";
+                        }
                         zeroCount = _capUnitList.IndexOf(SelectUnit) * 3;
+                    }
                 }
 
                 dividend = (int)(Convert.ToDouble(ComponentsValue) * Math.Pow(10, zeroCount));
