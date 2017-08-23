@@ -27,7 +27,7 @@ namespace RuiHaoConvertor.ViewModel
         private Components components;
         private List<string> _resistanceList, _capacitanceList, _powerList, _withstandingList, _precisionList, _resUnitList, _capUnitList;
         private List<string> _codeList;
-        private string message = "感谢使用本软件\r\n";
+        private string message;
         ExcelHelper _exportExcel;
 
         #endregion
@@ -248,6 +248,14 @@ namespace RuiHaoConvertor.ViewModel
             //SelectCategory = _resistanceList[0];
             //SelectPowerOrWithstanding = _powerList[2];
             //SelectPrecision = _precisionList[3];
+            message = "感谢使用本软件\r\n";
+            message += "使用步骤:\r\n";
+            message += "①.选择电阻电容标签\r\n";
+            message += "②.内容随选择标签改变后选择需要的属性, ";
+            message += "填入值\r\n";
+            message += "③.点击\"Confirm\"按钮, 会转换成相应公司件号显示在Message界面\r\n";
+            message += "④.完成所有件号转换后, 点击\"OK\"按钮会自动保存表格,随后关闭本软件.\r\n";
+            message += "注意:若没有保存文件,直接关闭本软件,会一同关闭表格文件.\r\n";
         }
 
         #endregion
@@ -521,6 +529,11 @@ namespace RuiHaoConvertor.ViewModel
             saveCodeThread.Start();
         }
 
+        public void Dispose()
+        {
+            if (_exportExcel != null)
+                _exportExcel.Dispose();
+        }
 
         #endregion
 

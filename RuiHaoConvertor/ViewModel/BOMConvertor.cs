@@ -118,7 +118,7 @@ namespace RuiHaoConvertor.ViewModel
                 exportExcel.Open(Environment.CurrentDirectory + @"/" + "模板.xlsx");
                 sourceExcel.Hide();
                 exportExcel.Hide();
-                sourceExcel.SetActivitySheet("Export");
+                //sourceExcel.SetActivitySheet("Export");
                 exportExcel.SetActivitySheet("Export");
 
                 // 输出状态
@@ -175,10 +175,10 @@ namespace RuiHaoConvertor.ViewModel
                 // 设置样式
                 exportExcel.Copy(exportExcel.GetRange("R1", "AG10"), exportExcel.GetRange(count + 7, 1, 10 + count, 16));   // 复制变更信息到对应位置
                 exportExcel.DeleteColumn("R", "AG");    // 删除变更信息
-                exportExcel.SetCellValue("D2", "应凌峰");
+                exportExcel.SetCellValue("D2", "Somebody");
                 exportExcel.SetCellBorder(7, 1, 7 + count - 1, 16); // 添加边框
-                exportExcel.setCellTextByFormat(exportExcel.GetRange(7, 1, 7 + count - 1 + 10, 16), "微软雅黑", "10");
-                exportExcel.SetCellValue(count - 1 + 3 + 7, 10, "应凌峰");
+                exportExcel.setCellTextByFormat(exportExcel.GetRange(7, 1, 7 + count - 1 + 10, 16), "微软雅黑", "9");
+                exportExcel.SetCellValue(count - 1 + 3 + 7, 10, "Somebody");
                 exportExcel.SetCellValue(count - 1 + 3 + 7, 11, DateTime.Now.ToShortDateString());
                 exportExcel.setCellTextByFormat(exportExcel.GetRange(count - 1 + 3 + 7, 11), "微软雅黑", "10", stringFormat: "yyyy-m-d");
 

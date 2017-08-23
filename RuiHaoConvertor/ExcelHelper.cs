@@ -216,6 +216,14 @@ namespace RuiHaoConvertor
             _workBook = _excelApp.Workbooks.Add(true);
             _workSheet = (Worksheet)_workBook.ActiveSheet;
         }
+
+        public void Open(DocEvents_ChangeEventHandler ChangeEventHandler)
+        {
+            _workBook = _excelApp.Workbooks.Add(true);
+            _workSheet = (Worksheet)_workBook.ActiveSheet;
+            _workSheet.Change += ChangeEventHandler;
+        }
+
         /// <summary>
         /// 打开指定路径文件
         /// </summary>
@@ -347,7 +355,7 @@ namespace RuiHaoConvertor
         {
             return _workSheet.Range[_excelApp.Cells[startRow, startColumn], _excelApp.Cells[endRow, endColumn]];
         }
-
+        
         #endregion
 
         #region "Detail control excel method"

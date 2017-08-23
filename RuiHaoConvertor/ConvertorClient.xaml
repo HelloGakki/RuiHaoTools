@@ -6,7 +6,10 @@
         xmlns:local="clr-namespace:RuiHaoConvertor"
         xmlns:vm="clr-namespace:RuiHaoConvertor.ViewModel"
         mc:Ignorable="d"
-       Title="RuiHaoConvertor By_Ying" Height="400" Width="580" ResizeMode="NoResize" Closing="Window_Closing">
+       Title="Convertor   By_Ying" Height="400" Width="580" ResizeMode="NoResize" Closing="Window_Closing">
+    <Window.CommandBindings>
+        <CommandBinding Command="vm:ConvertorViewModel.ShowAboutCommand" CanExecute="CommandCanExecute" Executed="CommandExecuted"/>
+    </Window.CommandBindings>
     <Window.DataContext>
         <vm:ConvertorViewModel/>
     </Window.DataContext>
@@ -30,6 +33,25 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
+        <Style TargetType="Label" x:Key="labelContentStyle">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=tabControl,Path=SelectedIndex}" Value="0">
+                    <Setter Property="Content" Value="{Binding ElementName=bomTabitem,Path=Header}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ElementName=tabControl,Path=SelectedIndex}" Value="1">
+                    <Setter Property="Content" Value="{Binding ElementName=rcTabitem,Path=Header}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ElementName=tabControl,Path=SelectedIndex}" Value="2">
+                    <Setter Property="Content" Value="{Binding ElementName=codeTabitem,Path=Header}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ElementName=tabControl,Path=SelectedIndex}" Value="3">
+                    <Setter Property="Content" Value="{Binding ElementName=tabControl,Path=Header}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding ElementName=tabControl,Path=SelectedIndex}" Value="4">
+                    <Setter Property="Content" Value="{Binding ElementName=tabControl,Path=Header}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -40,12 +62,12 @@
         </Grid.RowDefinitions>
         <Canvas Grid.Row="0" Background="#FF0D9AC4">
             <Image Canvas.Left="0" Canvas.Top="0" Style="{StaticResource imageStyle}" Stretch="UniformToFill" Margin="10 5 0 0"/>
-            <Label Canvas.Right="10" Canvas.Top="5" Content="Convertor" Foreground="#FFF7EFEF"
+            <Label Canvas.Right="10" Canvas.Top="5"  Style="{StaticResource labelContentStyle}" Foreground="#FFF7EFEF"
 				   FontFamily="Comic Sans MS" FontSize="28" FontWeight="Bold"/>
         </Canvas>
         <Canvas Grid.Row="1" Background="#FF525F63">
             <TabControl x:Name="tabControl" Grid.RowSpan="2" Canvas.Left="10" Canvas.Top="2" Width="552" Height="263">
-                <TabItem Header="BOM" AllowDrop="True" DragEnter="TabItem_DragEnter" >
+                <TabItem x:Name="bomTabitem" Header="BOM" AllowDrop="True" DragEnter="TabItem_DragEnter" >
                     <DockPanel>
                         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Center">
                             <TextBox x:Name="pathTextBox" Width="270" Margin="10 0 30 0" Text="{Binding BomConvertor.FilePath}"/>
@@ -59,7 +81,7 @@
                         </GroupBox>
                     </DockPanel>
                 </TabItem>
-                <TabItem Header="R-C">
+                <TabItem x:Name="rcTabitem" Header="R-C">
                     <DockPanel>
                         <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom" HorizontalAlignment="Center">
                             <RadioButton x:Name="resistorRadioButton" Content="电阻" Margin="10" IsChecked="True" Checked="resistorRadioButton_Checked"/>
@@ -84,9 +106,22 @@
                                       HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
                         </StackPanel>
                         <GroupBox Header="Message" Foreground="#FF0D9AC4" DockPanel.Dock="Top" Margin="10" BorderBrush="#FF0D9AC4" BorderThickness="1"  >
-                            <ScrollViewer x:Name="codeMessage" MouseLeave="codeMessage_MouseLeave">
-                                <TextBlock x:Name="messageBlock2" Foreground="#FF6C6E6E" FontSize="12" FontFamily="Microsoft YaHei" TextWrapping="Wrap" Padding="5"
+                            <ScrollViewer x:Name="rcScrollViewer" MouseLeave="rcScrollViewer_MouseLeave">
+                                <TextBlock x:Name="rcMessageBlock" Foreground="#FF6C6E6E" FontSize="12" FontFamily="Microsoft YaHei" TextWrapping="Wrap" Padding="5"
                                            Text="{Binding RCConvertor.Message}"/>
+                            </ScrollViewer>
+                        </GroupBox>
+                    </DockPanel>
+                </TabItem>
+                <TabItem x:Name="codeTabitem" Header="Code" AllowDrop="True" DragEnter="TabItem_DragEnter" >
+                    <DockPanel>
+                        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
+                            <Button x:Name="convertButton" Content="Convert" Padding="10 1 10 1" Click="convertButton_Click"/>
+                        </StackPanel>
+                        <GroupBox Header="Message" Foreground="#FF0D9AC4" DockPanel.Dock="Top" Margin="10" BorderBrush="#FF0D9AC4" BorderThickness="1"  >
+                            <ScrollViewer x:Name="codeScrollViewer" MouseLeave="codeScrollViewer_MouseLeave">
+                                <TextBlock x:Name="codeMessageBlock" Foreground="#FF6C6E6E" FontSize="12" FontFamily="Microsoft YaHei" TextWrapping="Wrap" Padding="5"
+                                           Text="{Binding CodeConvertor.Message}"/>
                             </ScrollViewer>
                         </GroupBox>
                     </DockPanel>
@@ -95,7 +130,7 @@
         </Canvas>
         <StackPanel Grid.Row="3" Orientation="Horizontal" FlowDirection="RightToLeft">
             <Button x:Name="cancelButton" Content="_CANCLE" Margin="10,0,0,0" Height="22" Width="75" Click="cancelButton_Click"/>
-            <Button x:Name="okButton" Content="_OK" Margin="10,0,0,0" Height="22" Width="75" Click="okButton_Click" IsEnabled="{Binding IsConvertor}"/>
+            <Button x:Name="okButton" Content="_OK" Margin="10,0,0,0" Height="22" Width="75" Click="okButton_Click"/>
         </StackPanel>
     </Grid>
 </Window>
