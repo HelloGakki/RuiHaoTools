@@ -348,7 +348,7 @@ namespace RuiHaoConvertor.ViewModel
                 if (_powerList.Contains(powerOrWithstanding))
                 {
                     if (powerOrWithstanding != "其他")
-                        return _powerList.IndexOf(powerOrWithstanding).ToString();
+                        return (_powerList.IndexOf(powerOrWithstanding) + 1).ToString();
                     else
                         return "Z";
                 }
@@ -360,7 +360,7 @@ namespace RuiHaoConvertor.ViewModel
                 if (_withstandingList.Contains(powerOrWithstanding))
                 {
                     if (powerOrWithstanding != "其他")
-                        return Convert.ToString(_withstandingList.IndexOf(powerOrWithstanding), 16);
+                        return Convert.ToString(_withstandingList.IndexOf(powerOrWithstanding) + 1, 16);
 
                     else
                         return "Z";

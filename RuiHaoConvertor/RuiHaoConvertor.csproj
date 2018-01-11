@@ -72,6 +72,10 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LibZ.Bootstrap, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LibZ.Bootstrap.1.2.0.0\lib\net35\LibZ.Bootstrap.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms" />
@@ -92,6 +96,7 @@
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
     <Compile Include="Components.cs" />
+    <Compile Include="LibZResolver.cs" />
     <Compile Include="ViewModel\BOMConvertor.cs" />
     <Compile Include="ViewModel\CodeConvertor.cs" />
     <Compile Include="ViewModel\ConvertorViewModel.cs" />
@@ -139,6 +144,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

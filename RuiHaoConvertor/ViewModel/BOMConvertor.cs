@@ -101,6 +101,9 @@ namespace RuiHaoConvertor.ViewModel
                 FilePath = openFileDialog.FileName;
             IsConvertor = true;
         }
+        /// <summary>
+        /// BOM转换导出
+        /// </summary>
         private void FileConvertor()
         {
             try
@@ -202,6 +205,11 @@ namespace RuiHaoConvertor.ViewModel
                 sourceExcel.Close();
             }
         }
+        /// <summary>
+        /// 获取数据填入的坐标
+        /// </summary>
+        /// <param name="title"></param>
+        /// <returns></returns>
         private int GetCoordinate(string title)
         {
             switch (title)
@@ -226,7 +234,9 @@ namespace RuiHaoConvertor.ViewModel
                     return -1;
             }
         }
-
+        /// <summary>
+        /// 杀进程
+        /// </summary>
         public void Dispose()
         {
             if (exportExcel != null)

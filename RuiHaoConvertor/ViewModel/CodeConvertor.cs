@@ -99,6 +99,7 @@ namespace RuiHaoConvertor.ViewModel
                     Message += "正在导入数据库...\r\n";
                     LibraryImport();
                     Message += "导入成功...\r\n" + "共 " + _supplierCode.Count.ToString() + " 项\r\n";
+
                 }
                 if (_exportExcel == null)
                 {
@@ -182,10 +183,12 @@ namespace RuiHaoConvertor.ViewModel
                     else
                         break;
                 }
+                _libraryExcel.Close();
             }
             catch (Exception e)
             {
                 Message = e.Message;
+                _libraryExcel.Close();
             }
         }
 
