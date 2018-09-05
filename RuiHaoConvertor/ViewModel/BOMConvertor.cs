@@ -122,8 +122,8 @@ namespace RuiHaoConvertor.ViewModel
                 exportExcel.Show();
                 sourceExcel.Open(FilePath);
                 exportExcel.Open(Environment.CurrentDirectory + @"/" + "模板.xlsx");
-                // sourceExcel.Hide();
-                // exportExcel.Hide();
+                sourceExcel.Hide();
+                exportExcel.Hide();
                 //sourceExcel.SetActivitySheet("Export");
                 exportExcel.SetActivitySheet("Export");
 
