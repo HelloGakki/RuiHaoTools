@@ -6,6 +6,7 @@ using System.ComponentModel;
 using RuiHaoConvertor;
 using System.Windows.Forms;
 using System.Threading;
+using System.Text.RegularExpressions;
 
 namespace RuiHaoConvertor.ViewModel
 {
@@ -16,7 +17,9 @@ namespace RuiHaoConvertor.ViewModel
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChange(string propertyName)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            //  PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #endregion
@@ -119,8 +122,8 @@ namespace RuiHaoConvertor.ViewModel
                 exportExcel.Show();
                 sourceExcel.Open(FilePath);
                 exportExcel.Open(Environment.CurrentDirectory + @"/" + "模板.xlsx");
-                sourceExcel.Hide();
-                exportExcel.Hide();
+                // sourceExcel.Hide();
+                // exportExcel.Hide();
                 //sourceExcel.SetActivitySheet("Export");
                 exportExcel.SetActivitySheet("Export");
 
@@ -154,7 +157,9 @@ namespace RuiHaoConvertor.ViewModel
                     for (int rowIndex = 0; rowIndex < dataList.Count; rowIndex++)
                     {
                         if (columnIndex == 11)
+                        {
                             exportExcel.SetCellValue(rowIndex + 7, columnIndex, Convert.ToDouble(dataList[rowIndex]));
+                        }
                         else
                         {
                             exportExcel.SetCellValue(rowIndex + 7, columnIndex, dataList[rowIndex]);
@@ -185,6 +190,8 @@ namespace RuiHaoConvertor.ViewModel
                 exportExcel.SetCellValue(count - 1 + 3 + 7, 11, DateTime.Now.ToShortDateString());
                 exportExcel.setCellTextByFormat(exportExcel.GetRange(count - 1 + 3 + 7, 11), "微软雅黑", "10", stringFormat: "yyyy-m-d");
 
+                // 查错
+                NumberCompare(count);
 
                 // 保存文件
                 exportExcel.Save("Export");
@@ -232,6 +239,28 @@ namespace RuiHaoConvertor.ViewModel
                     return 12;
                 default:
                     return -1;
+            }
+        }
+
+        /// <summary>
+        /// 比对位号和数量
+        /// </summary>
+        /// <param name="designator">位号</param>
+        /// <param name="number">数量</param>
+        /// <param name="count">项数</param>
+        /// <returns></returns>
+        public void NumberCompare(int count)
+        {
+            Regex numberCompareRegex = new Regex("[a-zA-Z]+");
+            for (var index = 1; index <= count; index++)
+            {
+                double numberVal = (double)exportExcel.GetCellValue(7 + index - 1, 11);
+                string stringVal = exportExcel.GetCellValue(7 + index - 1, 12) as string;
+
+                if (numberCompareRegex.Matches(stringVal).Count != Convert.ToInt32(numberVal))
+                {
+                    exportExcel.setCellTextByFormat(exportExcel.GetRange(7 + index - 1, 11), "微软雅黑", "10", colorIndex: 3);
+                }
             }
         }
         /// <summary>

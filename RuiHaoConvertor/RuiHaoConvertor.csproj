@@ -54,10 +54,10 @@
     <ApplicationIcon>mega_ball_128px.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>E81D67D939C66FDE239BDF41DC1143A573BA5262</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>9A865C5E7FA8218E3D9A8C22F467D42D07DD067A</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>RuiHaoConvertor_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>RuiHaoConvertor_1_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -151,6 +151,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
+    <None Include="RuiHaoConvertor_1_TemporaryKey.pfx" />
     <None Include="RuiHaoConvertor_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
@@ -208,6 +209,10 @@
     <Resource Include="Images\zubat_48px.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>set LIBZ=$(SolutionDir)packages\LibZ.Bootstrap.1.2.0.0\tools\libz.exe
+%25LIBZ%25 inject-dll --assembly RuiHaoConvertor.exe --include Office.dll --move</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
